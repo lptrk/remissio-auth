@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"os"
 	"remissio-auth/internal/auth"
+	"remissio-auth/middleware"
 
 	"github.com/joho/godotenv"
 	"gorm.io/driver/postgres"
@@ -33,7 +34,7 @@ func main() {
 	port := os.Getenv("APPLICATION_DEFAULT_PORT")
 	server := http.Server{
 		Addr:    port,
-		Handler: router,
+		Handler: middleware.Logging(router),
 	}
 
 	err = server.ListenAndServe()
