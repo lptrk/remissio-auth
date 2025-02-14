@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"os"
+	"remissio-auth/internal/auth"
 
 	"github.com/joho/godotenv"
 	"gorm.io/driver/postgres"
@@ -16,5 +17,13 @@ func main() {
 	}
 
 	dbConnStr := os.Getenv("DB_CONNECTION_STRING")
-	db, err = gorm.Open(postgres.Open(dbConnStr), &gorm.Config{})
+	db, err := gorm.Open(postgres.Open(dbConnStr), &gorm.Config{})
+	if err != nil {
+		log.Fatal("Error establishing database connection")
+	}
+
+	err = db.AutoMigrate(&auth.User{})
+	if err != nil {
+		log.Fatal("Error migrating schema 'User'")
+	}
 }
